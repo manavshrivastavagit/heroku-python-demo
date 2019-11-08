@@ -1,7 +1,7 @@
 # app.py
 from flask import Flask, request, jsonify
 
-import dialogflow_v2 as dialogflow
+import dialogflow
 
 import psycopg2
 import requests
