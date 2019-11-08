@@ -94,7 +94,7 @@ def get_reporting_manager(first_name='Ronak', last_name = 'Omprakash'):
         reporting_manager = cur.fetchall()
         if reporting_manager is None or '':
             raise EmployeeNotFound
-        return reporting_manager
+        return jsonify(result = reporting_manager )
     except EmployeeNotFound as e:
         return jsonify('No employee found by that name')
     except Exception as e:
