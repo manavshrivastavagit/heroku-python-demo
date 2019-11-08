@@ -2,12 +2,13 @@
 from flask import Flask, request, jsonify
 import os
 import dialogflow
-
+import pandas as pd
 import psycopg2
 import requests
 from flask_cors import CORS
 
 from exception.employee_not_found import EmployeeNotFound
+from exception.account_not_found import AccountNotFound
 
 # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:\\Users\\SridharRamakrishnanI\\Development\\github\\nero-heroku-python\\NERO-95a41ac7c5b2.json"
 
@@ -84,7 +85,7 @@ def get_enquero_accounts():
     try:
         cur.execute("""select count(account) from (select distinct account from public.enq_emp_details) a """)
         account_count = cur.fetchall()
-        return account_count
+        return jsonify(result = account_count)
     except Exception as e:
         return jsonify(e)
 
@@ -92,7 +93,7 @@ def get_enquero_accounts():
 def get_reporting_manager(first_name , last_name = ''):
     cur = conn.cursor()
     try:
-        stm = "select first_name, last_name, reporting_lead from public.enq_emp_details where first_name = '%s' or last_name = '%s' " % (first_name, last_name)
+        stm = "select first_name, last_name, reporting_lead from public.enq_emp_details where lower(first_name) = '%s' or lower(last_name) = '%s' " % (first_name.lower(), last_name.lower())
         print ("stm-->",stm )
         cur.execute(stm)
         reporting_manager = cur.fetchall()
@@ -103,6 +104,39 @@ def get_reporting_manager(first_name , last_name = ''):
         return jsonify('No employee found by that name')
     except Exception as e:
         return jsonify(e)
+
+@app.route('/getaccountheadcount', methods=['GET'])
+def get_account_head_count(account) :
+    cur = conn.cursor()
+    try:
+        stm = "select count(*) from public.enq_emp_details where lower(account) = '%s' " % (account.lower())
+        cur.execute(stm)
+        account_head_count = cur.fetchall()
+        if len(account_head_count) == 0:
+            raise AccountNotFound
+        return jsonify(result = account_head_count )
+    except AccountNotFound as e:
+        return jsonify('No account found by that name')
+    except Exception as e:
+        return jsonify(e)
+
+@app.route('/getteammembers', methods=['GET'])
+def get_team_members(myfirstname = 'manav', mylastname = 'shrivastava'):
+    cur = conn.cursor()
+    try:
+        query = "select account, business_unit_description, reporting_lead, delivery_lead from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s'" % (myfirstname, mylastname)
+        df = pd.read_sql_query(query, conn)
+        print(df['account'][0])
+        print('--------------')
+        team_member_query = "select concat(first_name, ' ' , last_name) from public.enq_emp_details where lower(account) = '%s'  and lower(business_unit_description) = '%s' and lower(reporting_lead) = '%s' and lower(delivery_lead) = '%s' and lower(first_name) != '%s' and lower(last_name) != '%s' " % (df['account'][0].lower(), df['business_unit_description'][0].lower(), df['reporting_lead'][0].lower(), df['delivery_lead'][0].lower(), myfirstname.lower(), mylastname.lower())
+        print(team_member_query)
+        cur.execute(team_member_query)
+        team_members = cur.fetchall()
+        return jsonify(result = team_members )
+    except Exception as e:
+        return e
+
+
 
 @app.route('/validuser', methods=['GET'])
 def isvaliduser():

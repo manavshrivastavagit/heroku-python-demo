@@ -9,3 +9,4 @@ dialogflow
 psycopg2
 requests
 flask-cors
+pandas
