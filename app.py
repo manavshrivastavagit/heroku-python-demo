@@ -76,7 +76,17 @@ def get_enquero_accounts():
     try:
         cur.execute("""select count(account) from (select distinct account from public.enq_emp_details) a """)
         account_count = cur.fetchall()
-        return jsonify(results = account_count)
+        return account_count
+    except Exception as e:
+        return jsonify(e)
+
+@app.route('/getreportingmanager/', methods=['GET'])
+def get_enquero_accounts(first_name, last_name = ''):
+    cur = conn.cursor()
+    try:
+        cur.execute("""select first_name, last_name, reporting_lead from public.enq_emp_details where first_name = %s or last_name = %s """ % (first_name, last_name))
+        reporting_manager = cur.fetchall()
+        return reporting_manager
     except Exception as e:
         return jsonify(e)
 
