@@ -6,6 +6,8 @@ import dialogflow
 import psycopg2
 import requests
 
+from exception.employee_not_found import EmployeeNotFound
+
 url = requests.utils.urlparse(
         'postgres://uadqvrzvvhsgvl:76e9e53176d897f8bb1290fec47bcdde69043710aecb602067de96961e1c7bc0@ec2-107-21-126-201.compute-1.amazonaws.com:5432/d7d2gs1qbqj579')
 
@@ -88,7 +90,11 @@ def get_enquero_accounts(first_name, last_name = ''):
     try:
         cur.execute("""select first_name, last_name, reporting_lead from public.enq_emp_details where first_name = %s or last_name = %s """ % (first_name, last_name))
         reporting_manager = cur.fetchall()
+        if reporting_manager is None or '':
+            raise EmployeeNotFound
         return reporting_manager
+    except EmployeeNotFound as e:
+        return jsonify('No employee found by that name')
     except Exception as e:
         return jsonify(e)
 
