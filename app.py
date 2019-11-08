@@ -25,7 +25,7 @@ def respond():
     name = request.args.get("name", None)
 
     # For debugging
-    print("got name {name}")
+    print("got name: " + name)
 
     response = {}
 
@@ -37,7 +37,7 @@ def respond():
         response["ERROR"] = "name can't be numeric."
     # Now the user entered a valid name
     else:
-        response["MESSAGE"] = "Welcome {name} to our awesome platform!!"
+        response["MESSAGE"] = "Welcome "+ name +" to our awesome platform!!"
 
     # Return the response in json format
     return jsonify(response)
@@ -104,9 +104,18 @@ def index():
     return "<h1>Welcome to our server !!</h1>"
 
 # check DF server connection
-@app.route('/df')
+@app.route('/api/v1/ask-nero', methods=['GET'])
+def askNero():
+     # Retrieve the name from url parameter
+    query = request.args.get("query", None)
+    return detect_intent_texts("nero-sgiuhb", "123", query, "en-US" )
+
+# check DF server connection
+@app.route('/df', methods=['GET'])
 def df():
-    return detect_intent_texts("nero-sgiuhb", "123", "when was enquero founded", "en-US" )
+     # Retrieve the name from url parameter
+     # query = request.args.get("query", None)
+    return detect_intent_texts("nero-sgiuhb", "123", "Hi", "en-US" )    
 
 
 def detect_intent_texts(project_id, session_id, texts, language_code):
