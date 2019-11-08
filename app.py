@@ -58,8 +58,10 @@ def get_all_employee_names():
     try:
         cur.execute("""SELECT first_name, last_name from public.enq_emp_details""")
         rows = cur.fetchall()
+        employee_list = []
         for row in rows:
-            print(row)
+            employee_list.append(row[0])
+        return employee_list
     except Exception as e:
         print(e)
 
