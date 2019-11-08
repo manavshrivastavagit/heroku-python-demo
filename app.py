@@ -1,6 +1,6 @@
 # app.py
 from flask import Flask, request, jsonify
-
+import os
 import dialogflow
 
 import psycopg2
@@ -8,6 +8,8 @@ import requests
 from flask_cors import CORS
 
 from exception.employee_not_found import EmployeeNotFound
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:\\Users\\SridharRamakrishnanI\\Development\\github\\nero-heroku-python\\NERO-95a41ac7c5b2.json"
 
 url = requests.utils.urlparse(
         'postgres://uadqvrzvvhsgvl:76e9e53176d897f8bb1290fec47bcdde69043710aecb602067de96961e1c7bc0@ec2-107-21-126-201.compute-1.amazonaws.com:5432/d7d2gs1qbqj579')
@@ -87,14 +89,33 @@ def get_enquero_accounts():
         return jsonify(e)
 
 @app.route('/getreportingmanager', methods=['GET'])
-def get_reporting_manager(first_name='Ronak', last_name = 'Omprakash'):
+def get_reporting_manager(first_name , last_name = ''):
     cur = conn.cursor()
     try:
-        cur.execute("select first_name, last_name, reporting_lead from public.enq_emp_details where first_name = %s or last_name = %s " % (first_name, last_name))
+        stm = "select first_name, last_name, reporting_lead from public.enq_emp_details where first_name = '%s' or last_name = '%s' " % (first_name, last_name)
+        print ("stm-->",stm )
+        cur.execute(stm)
         reporting_manager = cur.fetchall()
-        if reporting_manager is None or '':
+        if len(reporting_manager) == 0:
             raise EmployeeNotFound
-        return reporting_manager
+        return jsonify(result = reporting_manager )
+    except EmployeeNotFound as e:
+        return jsonify('No employee found by that name')
+    except Exception as e:
+        return jsonify(e)
+
+@app.route('/validuser', methods=['GET'])
+def isvaliduser():
+    first_name = request.args.get('firstname')
+    last_name = request.args.get('lastname')
+    cur = conn.cursor()
+    try:
+        stm = "select first_name, last_name from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s' " % (first_name.lower(), last_name.lower())
+        cur.execute(stm)
+        emp = cur.fetchall()
+        if len(emp) == 0:
+            raise EmployeeNotFound
+        return jsonify(result = emp )
     except EmployeeNotFound as e:
         return jsonify('No employee found by that name')
     except Exception as e:
