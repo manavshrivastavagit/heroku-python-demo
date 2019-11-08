@@ -68,8 +68,17 @@ def get_all_employee_names():
             employee_list.append(row[0])
         return jsonify(results = employee_list )
     except Exception as e:
-        print(e)
+        return jsonify(e)
 
+@app.route('/getenqueroaccounts/', methods=['GET'])
+def get_enquero_accounts():
+    cur = conn.cursor()
+    try:
+        cur.execute("""select count(account) from (select distinct account from public.enq_emp_details) a """)
+        account_count = cur.fetchall()
+        return jsonify(results = account_count)
+    except Exception as e:
+        return jsonify(e)
 
 # A welcome message to test our server
 @app.route('/')
