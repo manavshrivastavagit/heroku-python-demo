@@ -5,6 +5,7 @@ import dialogflow
 
 import psycopg2
 import requests
+from flask_cors import CORS
 
 from exception.employee_not_found import EmployeeNotFound
 
@@ -18,6 +19,7 @@ print(url.username)
 conn = psycopg2.connect(db)
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/getmsg/', methods=['GET'])
 def respond():
@@ -148,6 +150,7 @@ def detect_intent_texts(project_id, session_id, texts, language_code):
         response.query_result.fulfillment_text)) 
     print('Fulfillment query_result: {}\n'.format(
         response.query_result)) 
+    # print (json.dumps(response, indent=2))
     return response.query_result.fulfillment_text       
 
 if __name__ == '__main__':
