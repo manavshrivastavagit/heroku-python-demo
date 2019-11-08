@@ -88,7 +88,9 @@ def get_enquero_accounts():
 def get_reporting_manager(first_name='Ronak', last_name = 'Omprakash'):
     cur = conn.cursor()
     try:
-        cur.execute("select first_name, last_name, reporting_lead from public.enq_emp_details where first_name = %s or last_name = %s " % (first_name, last_name))
+        stm = "select first_name, last_name, reporting_lead from public.enq_emp_details where first_name = '%s' or last_name = '%s' " % (first_name, last_name)
+        print ("stm-->",stm )
+        cur.execute(stm)
         reporting_manager = cur.fetchall()
         if reporting_manager is None or '':
             raise EmployeeNotFound
