@@ -6,10 +6,6 @@ import dialogflow_v2 as dialogflow
 import psycopg2
 import requests
 
-url = requests.utils.urlparse('postgres://uadqvrzvvhsgvl:76e9e53176d897f8bb1290fec47bcdde69043710aecb602067de96961e1c7bc0@ec2-107-21-126-201.compute-1.amazonaws.com:5432/d7d2gs1qbqj579')
-
-db = "dbname=%s user=%s password=%s host=%s " % (url.path[1:], url.username, url.password, url.hostname)
-
 
 app = Flask(__name__)
 
@@ -52,11 +48,19 @@ def post_something():
             "ERROR": "no name found, please send a name."
         })
 
-conn = psycopg2.connect(db)
-cur = conn.cursor()
+
 
 @app.route('/getallemployees/', methods=['GET'])
 def get_all_employee_names():
+    url = requests.utils.urlparse(
+        'postgres://uadqvrzvvhsgvl:76e9e53176d897f8bb1290fec47bcdde69043710aecb602067de96961e1c7bc0@ec2-107-21-126-201.compute-1.amazonaws.com:5432/d7d2gs1qbqj579')
+
+    db = "dbname=%s user=%s password=%s host=%s " % (url.path[1:], url.username, url.password, url.hostname)
+
+    print(url.path[1])
+    print(url.username)
+    conn = psycopg2.connect(db)
+    cur = conn.cursor()
     try:
         cur.execute("""SELECT first_name, last_name from public.enq_emp_details""")
         rows = cur.fetchall()
