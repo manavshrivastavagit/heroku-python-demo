@@ -84,19 +84,19 @@ def get_enquero_accounts():
     except Exception as e:
         return jsonify(e)
 
-@app.route('/getreportingmanager/', methods=['GET'])
-def get_enquero_accounts(first_name, last_name = ''):
-    cur = conn.cursor()
-    try:
-        cur.execute("select first_name, last_name, reporting_lead from public.enq_emp_details where first_name = %s or last_name = %s " % (first_name, last_name))
-        reporting_manager = cur.fetchall()
-        if reporting_manager is None or '':
-            raise EmployeeNotFound
-        return reporting_manager
-    except EmployeeNotFound as e:
-        return jsonify('No employee found by that name')
-    except Exception as e:
-        return jsonify(e)
+# @app.route('/getreportingmanager/', methods=['GET'])
+# def get_enquero_accounts(first_name, last_name = ''):
+#     cur = conn.cursor()
+#     try:
+#         cur.execute("select first_name, last_name, reporting_lead from public.enq_emp_details where first_name = %s or last_name = %s " % (first_name, last_name))
+#         reporting_manager = cur.fetchall()
+#         if reporting_manager is None or '':
+#             raise EmployeeNotFound
+#         return reporting_manager
+#     except EmployeeNotFound as e:
+#         return jsonify('No employee found by that name')
+#     except Exception as e:
+#         return jsonify(e)
 
 # A welcome message to test our server
 @app.route('/')
