@@ -55,9 +55,10 @@ def get_all_employee_names():
 
     db = "dbname=%s user=%s password=%s host=%s " % (url.path[1:], url.username, url.password, url.hostname)
 
-    print(url.path[1])
+    print(url.path)
     print(url.username)
     conn = psycopg2.connect(db)
+    print('Connected to Heroku')
     cur = conn.cursor()
     try:
         cur.execute("""SELECT first_name, last_name from public.enq_emp_details""")
@@ -65,7 +66,7 @@ def get_all_employee_names():
         employee_list = []
         for row in rows:
             employee_list.append(row[0])
-        return employee_list
+        return jsonify(results = employee_list )
     except Exception as e:
         print(e)
 
