@@ -84,8 +84,8 @@ def get_enquero_accounts():
     except Exception as e:
         return jsonify(e)
 
-@app.route('/getreportingmanager/', methods=['GET'])
-def get_reporting_manager(first_name, last_name = ''):
+@app.route('/getreportingmanager', methods=['GET'])
+def get_reporting_manager(first_name='Ronak', last_name = 'Omprakash'):
     cur = conn.cursor()
     try:
         cur.execute("select first_name, last_name, reporting_lead from public.enq_emp_details where first_name = %s or last_name = %s " % (first_name, last_name))
