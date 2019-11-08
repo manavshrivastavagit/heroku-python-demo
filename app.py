@@ -108,7 +108,7 @@ def isvaliduser():
     last_name = request.args.get('lastname')
     cur = conn.cursor()
     try:
-        stm = "select first_name, last_name from public.enq_emp_details where first_name = '%s' and last_name = '%s' " % (first_name, last_name)
+        stm = "select first_name, last_name from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s' " % (first_name.lower(), last_name.lower())
         cur.execute(stm)
         emp = cur.fetchall()
         if len(emp) == 0:
