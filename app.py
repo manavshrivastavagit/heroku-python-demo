@@ -6,6 +6,14 @@ import dialogflow
 import psycopg2
 import requests
 
+url = requests.utils.urlparse(
+        'postgres://uadqvrzvvhsgvl:76e9e53176d897f8bb1290fec47bcdde69043710aecb602067de96961e1c7bc0@ec2-107-21-126-201.compute-1.amazonaws.com:5432/d7d2gs1qbqj579')
+
+db = "dbname=%s user=%s password=%s host=%s " % (url.path[1:], url.username, url.password, url.hostname)
+
+print(url.path)
+print(url.username)
+conn = psycopg2.connect(db)
 
 app = Flask(__name__)
 
@@ -52,14 +60,7 @@ def post_something():
 
 @app.route('/getallemployees/', methods=['GET'])
 def get_all_employee_names():
-    url = requests.utils.urlparse(
-        'postgres://uadqvrzvvhsgvl:76e9e53176d897f8bb1290fec47bcdde69043710aecb602067de96961e1c7bc0@ec2-107-21-126-201.compute-1.amazonaws.com:5432/d7d2gs1qbqj579')
-
-    db = "dbname=%s user=%s password=%s host=%s " % (url.path[1:], url.username, url.password, url.hostname)
-
-    print(url.path[1])
-    print(url.username)
-    conn = psycopg2.connect(db)
+    print('Connected to Heroku')
     cur = conn.cursor()
     try:
         cur.execute("""SELECT first_name, last_name from public.enq_emp_details""")
@@ -67,10 +68,19 @@ def get_all_employee_names():
         employee_list = []
         for row in rows:
             employee_list.append(row[0])
-        return employee_list
+        return jsonify(results = employee_list )
     except Exception as e:
-        print(e)
+        return jsonify(e)
 
+@app.route('/getenqueroaccounts/', methods=['GET'])
+def get_enquero_accounts():
+    cur = conn.cursor()
+    try:
+        cur.execute("""select count(account) from (select distinct account from public.enq_emp_details) a """)
+        account_count = cur.fetchall()
+        return jsonify(results = account_count)
+    except Exception as e:
+        return jsonify(e)
 
 # A welcome message to test our server
 @app.route('/')
