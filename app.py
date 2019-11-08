@@ -1,6 +1,16 @@
 # app.py
 from flask import Flask, request, jsonify
+
 import dialogflow_v2 as dialogflow
+
+import psycopg2
+import requests
+
+url = requests.utils.urlparse('postgres://uadqvrzvvhsgvl:76e9e53176d897f8bb1290fec47bcdde69043710aecb602067de96961e1c7bc0@ec2-107-21-126-201.compute-1.amazonaws.com:5432/d7d2gs1qbqj579')
+
+db = "dbname=%s user=%s password=%s host=%s " % (url.path[1:], url.username, url.password, url.hostname)
+
+
 app = Flask(__name__)
 
 @app.route('/getmsg/', methods=['GET'])
@@ -41,6 +51,22 @@ def post_something():
         return jsonify({
             "ERROR": "no name found, please send a name."
         })
+
+conn = psycopg2.connect(db)
+cur = conn.cursor()
+
+@app.route('/getallemployees/', methods=['GET'])
+def get_all_employee_names():
+    try:
+        cur.execute("""SELECT first_name, last_name from public.enq_emp_details""")
+        rows = cur.fetchall()
+        employee_list = []
+        for row in rows:
+            employee_list.append(row[0])
+        return employee_list
+    except Exception as e:
+        print(e)
+
 
 # A welcome message to test our server
 @app.route('/')
