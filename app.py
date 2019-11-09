@@ -292,16 +292,16 @@ def detect_intent_texts(project_id, session_id, texts, firstname, lastname, lang
 
     decision.response_parser(response, firstname, lastname)
 
-    print('=' * 20)
+    # print('=' * 20)
+    # # print('Query text: {}'.format(response.query_result.query_text))
     # print('Query text: {}'.format(response.query_result.query_text))
-    print('Query text: {}'.format(response.query_result.query_text))
-    print('Detected intent: {} (confidence: {})\n'.format(
-        response.query_result.intent.display_name,
-        response.query_result.intent_detection_confidence))
-    print('Fulfillment text: {}\n'.format(
-        response.query_result.fulfillment_text)) 
-    print('Fulfillment query_result: {}\n'.format(
-        response.query_result)) 
+    # print('Detected intent: {} (confidence: {})\n'.format(
+    #     response.query_result.intent.display_name,
+    #     response.query_result.intent_detection_confidence))
+    # print('Fulfillment text: {}\n'.format(
+    #     response.query_result.fulfillment_text))
+    # print('Fulfillment query_result: {}\n'.format(
+    #     response.query_result))
     # print (json.dumps(response, indent=2))
     return response.query_result.fulfillment_text       
 
