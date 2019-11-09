@@ -6,6 +6,8 @@ def response_parser(response, firstname, lastname):
     fulfillment_text = response.query_result.fulfillment_text
     print('^^^^^^^', response)
     print('======= response completed')
+    intent = response.query_result.intent.display_name
+    print('-------------', intent)
     if not fulfillment_text:
         if 'team members' in query_text:
             pass
