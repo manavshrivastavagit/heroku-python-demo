@@ -6,7 +6,7 @@ def response_parser(response, firstname, lastname):
     print('---------------' , query_text)
     fulfillment_text = response.query_result.fulfillment_text
     print('^^^^^^^^^^^^^', fulfillment_text)
-    if fulfillment_text is None or '':
+    if not fulfillment_text:
         print('no text recived routing')
     else:
         print('---------------', fulfillment_text)
