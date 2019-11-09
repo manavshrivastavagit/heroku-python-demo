@@ -188,7 +188,7 @@ def reportee_count():
     reporting_lead = request.args.get('reporting_lead')
     cur = conn.cursor()
     try:
-        cur.execute("""select count(*) from public.enq_emp_details where lower(reporting_lead) = '%s' """ % (reporting_lead.lower()))
+        cur.execute("""select payroll_name from public.enq_emp_details where lower(reporting_lead) = '%s' """ % (reporting_lead.lower()))
         rp_count = cur.fetchall()
         return jsonify(result=rp_count)
     except Exception as e:

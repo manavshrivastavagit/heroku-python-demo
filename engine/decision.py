@@ -66,7 +66,7 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = 'Location is: ' + s
             return s
-        elif 'doj' in query_text or 'date of joining' in query_text or 'joining date' in query_text or 'hiring' in query_text or 'hire' in query_text and 'know_self' in intent:
+        elif txt == 'hire_date' and 'know_self' in intent:
             s = ""
             t = requests.get(url + '/getjoiningdate?firstname='+firstname+'&lastname='+lastname)
             doj = t.json()
@@ -84,7 +84,7 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = 'Practice Lead is: ' + s
             return s
-        elif 'location' in query_text or 'place' in query_text and 'know_others' in intent:
+        elif txt == 'location_description' and 'know_others' in intent:
             s = ""
             t = requests.get(url + '/location?firstname='+firstname+'&lastname='+lastname)
             loc = t.json()
