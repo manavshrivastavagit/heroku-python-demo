@@ -65,7 +65,7 @@ def response_parser(response, firstname, lastname):
             for name in bu:
                 s = s + str(bu[name])
             s = s[2:-2]
-            s = 'Your Business Unit is: ' + s
+            s = """%s %s business unit is """ % (firstname, lastname) + s
             return s
         elif txt == 'account' and 'know_self' in intent:
             s = ""
