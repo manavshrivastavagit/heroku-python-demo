@@ -12,7 +12,9 @@ def response_parser(response, firstname, lastname):
     reporting_lead = ''
     print("---------Response:"+str(response))
     jsonObj = MessageToJson(response.query_result)
-    print(json.loads(jsonObj)["parameters"])
+    att = json.loads(jsonObj)["parameters"]
+    txt = att['attribute']
+    print("TEXT: " + txt)
     if not fulfillment_text:
         if 'team members' in query_text and 'know_your_team' in intent:
             s = "Team members are : "
