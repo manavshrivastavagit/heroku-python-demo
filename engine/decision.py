@@ -46,7 +46,7 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = 'Account is: ' + s
             return s
-        elif 'number of people' in query_text and 'know_others' in intent:
+        elif 'who all report' in query_text and 'know_others' in intent:
             firstname = response.query_result.fields.given-name
             lastname = response.query_result.fields.last-name
             print(firstname)
