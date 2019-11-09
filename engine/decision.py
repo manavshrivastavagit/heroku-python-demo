@@ -25,7 +25,7 @@ def response_parser(response, firstname, lastname):
             for name in team_members:
                 s = s + str(team_members[name])
             return s
-        elif txt == 'reporting_lead' in query_text and 'know_self' in intent:
+        elif txt == 'reporting_lead' and 'know_self' in intent:
             s = ""
             t = requests.get(url + '/getreportingmanager?firstname='+firstname+'&lastname='+lastname)
             rm = t.json()
