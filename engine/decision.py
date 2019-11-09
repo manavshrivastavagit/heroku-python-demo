@@ -9,7 +9,7 @@ def response_parser(response, firstname, lastname):
     if not fulfillment_text:
         if 'team members' in query_text and 'know_your_team' in intent:
             team_members = requests.get(url+'/getteammembers?firstname='+firstname+'&lastname='+lastname)
-            print(team_members.json())
+            print(json.dumps(team_members.json()))
             return "my team members"
     else:
      return fulfillment_text
