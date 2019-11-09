@@ -16,7 +16,7 @@ def response_parser(response, firstname, lastname):
         jsonObj = MessageToJson(response.query_result)
         print(json.loads(jsonObj)["parameters"])
         att = json.loads(jsonObj)["parameters"]
-        txt = att.get('col_name')
+        txt = att['col_name']
         value = att.get('col_value')
         cnt = att.get('db_action')
         print("TEXT: " + txt)
