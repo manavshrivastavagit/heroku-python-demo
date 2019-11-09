@@ -16,6 +16,9 @@ def response_parser(response, firstname, lastname):
     att = json.loads(jsonObj)["parameters"]
     txt = att['col_name']
     print("TEXT: " + txt)
+    f = att['given-name']
+    print("F: " + f)
+    l = att['last-name']
     if not fulfillment_text:
         if txt == 'team' and 'know_your_team' in intent:
             s = "Team members are : "
@@ -35,12 +38,9 @@ def response_parser(response, firstname, lastname):
             s = 'Reporting Manager: ' + s
             return s
         elif txt == 'reporting_lead' and 'know_others' in intent:
-            f = att['given-name']
-            print("F: " + f)
-            l = att['last-name']
             if f:
-                firstname = f
-                lastname = l
+                firstname = f.lower()
+                lastname = l.lower()
             s = ""
             t = requests.get(url + '/getreportingmanager?firstname='+firstname+'&lastname='+lastname)
             rm = t.json()
