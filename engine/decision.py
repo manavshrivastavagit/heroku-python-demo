@@ -7,7 +7,7 @@ url = 'https://nero-enquero.herokuapp.com'
 def response_parser(response, firstname, lastname):
     query_text = response.query_result.query_text
     fulfillment_text = response.query_result.fulfillment_text
-    intent = response.query_result.intent
+    intent = response.query_result.intent.display_name
     reporting_lead = ''
     print("---------Response:"+str(response))
     if not fulfillment_text:
