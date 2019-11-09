@@ -63,8 +63,6 @@ def post_something():
             "ERROR": "no name found, please send a name."
         })
 
-
-
 @app.route('/getallemployees/', methods=['GET'])
 def get_all_employee_names():
     print('Connected to Heroku')
@@ -88,6 +86,101 @@ def get_enquero_accounts():
         return jsonify(result = account_count)
     except Exception as e:
         return jsonify(e)
+
+@app.route('/getprojectname/', methods=['GET'])
+def get_project_name(firstname, lastname):
+    cur = conn.cursor()
+    try:
+        cur.execute("""select account from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s' """ % (firstname.lower(), lastname.lower()))
+        account_name = cur.fetchall()
+        return jsonify(result = account_name)
+    except Exception as e:
+        return jsonify(e)
+
+
+@app.route('/getjoiningdate/', methods=['GET'])
+def get_hire_date(firstname, lastname):
+    cur = conn.cursor()
+    try:
+        cur.execute("""select hire_date from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s' """ % (firstname.lower(), lastname.lower()))
+        hire_date = cur.fetchall()
+        return jsonify(result = hire_date)
+    except Exception as e:
+        return jsonify(e)
+
+@app.route('/getbusinessunit/', methods=['GET'])
+def get_business_unit(firstname, lastname):
+    cur = conn.cursor()
+    try:
+        cur.execute("""select business_unit_description from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s' """ % (firstname.lower(), lastname.lower()))
+        business_unit = cur.fetchall()
+        return jsonify(result = business_unit)
+    except Exception as e:
+        return jsonify(e)
+
+@app.route('/location/', methods=['GET'])
+def get_location(firstname, lastname):
+    cur = conn.cursor()
+    try:
+        cur.execute("""select location_description from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s' """ % (firstname.lower(), lastname.lower()))
+        location = cur.fetchall()
+        return jsonify(result = location)
+    except Exception as e:
+        return jsonify(e)
+
+@app.route('/getpractielead/', methods=['GET'])
+def get_practice_lead(firstname, lastname):
+    cur = conn.cursor()
+    try:
+        cur.execute("""select practice_lead from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s' """ % (firstname.lower(), lastname.lower()))
+        practice_lead = cur.fetchall()
+        return jsonify(result = practice_lead)
+    except Exception as e:
+        return jsonify(e)
+
+@app.route('/countbybusinesstitle/', methods=['GET'])
+def count_by_business_title(title):
+    cur = conn.cursor()
+    try:
+        cur.execute("""select count(*) from public.enq_emp_details where lower(business_title) = '%s' """ % (title.lower()))
+        count = cur.fetchall()
+        return jsonify(result = count)
+    except Exception as e:
+        return jsonify(e)
+
+@app.route('/largest_account/', methods=['GET'])
+def largest_account():
+    cur = conn.cursor()
+    try:
+        cur.execute("""select account from (select account, count(*) c from public.enq_emp_details group by account order by c desc) a  limit 1""" )
+        account = cur.fetchall()
+        return jsonify(result = account)
+    except Exception as e:
+        return jsonify(e)
+
+
+@app.route('/bucount/', methods=['GET'])
+def count_under_bu(bu):
+    cur = conn.cursor()
+    try:
+        cur.execute("""select count(*) from public.enq_emp_details where lower(business_unit_description) = '%s' """  %  (bu.lower()))
+        bu_count = cur.fetchall()
+        return jsonify(result = bu_count)
+    except Exception as e:
+        return jsonify(e)
+
+
+@app.route('/reporteecount/', methods=['GET'])
+def reportee_count(firstname, lastname):
+    cur = conn.cursor()
+    name = lastname.lower() + ', ' + firstname.lower()
+    try:
+        cur.execute("""select count(*) from public.enq_emp_details where lower(reporting_lead) = '%s' """  %  (name))
+        rp_count = cur.fetchall()
+        return jsonify(result = rp_count)
+    except Exception as e:
+        return jsonify(e)
+
 
 @app.route('/getreportingmanager', methods=['GET'])
 def get_reporting_manager(first_name , last_name = ''):
@@ -121,7 +214,7 @@ def get_account_head_count(account) :
         return jsonify(e)
 
 @app.route('/getteammembers', methods=['GET'])
-def get_team_members(myfirstname = 'manav', mylastname = 'shrivastava'):
+def get_team_members(myfirstname, mylastname):
     cur = conn.cursor()
     try:
         query = "select account, business_unit_description, reporting_lead, delivery_lead from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s'" % (myfirstname, mylastname)
