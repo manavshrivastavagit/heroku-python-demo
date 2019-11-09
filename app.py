@@ -153,8 +153,9 @@ def get_practice_lead():
 
 
 @app.route('/countbybusinesstitle', methods=['GET'])
-def count_by_business_title(title):
+def count_by_business_title():
     cur = conn.cursor()
+    title = request.args.get('title')
     try:
         cur.execute("""select count(*) from public.enq_emp_details where lower(business_title) = '%s' """ % (title.lower()))
         count = cur.fetchall()
@@ -175,12 +176,13 @@ def largest_account():
 
 
 @app.route('/bucount/', methods=['GET'])
-def count_under_bu(bu):
+def count_under_bu():
     cur = conn.cursor()
+    bu = request.args.get('bu')
     try:
         cur.execute("""select count(*) from public.enq_emp_details where lower(business_unit_description) = '%s' """  %  (bu.lower()))
         bu_count = cur.fetchall()
-        return jsonify(result = bu_count)
+        return jsonify(result=bu_count)
     except Exception as e:
         return jsonify(e)
 

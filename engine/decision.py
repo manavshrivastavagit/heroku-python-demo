@@ -26,6 +26,12 @@ def response_parser(response, firstname, lastname):
                 s = s + str(team_members[name])
             return s
         elif txt == 'reporting_lead' and 'know_self' in intent:
+            f = att['given-name']
+            print("F: " + f)
+            l = att['last-name']
+            if f:
+                f = firstname
+                l = lastname
             s = ""
             t = requests.get(url + '/getreportingmanager?firstname='+firstname+'&lastname='+lastname)
             rm = t.json()
@@ -93,9 +99,9 @@ def response_parser(response, firstname, lastname):
             for name in loc:
                 s = s + str(loc[name])
             s = s[2:-2]
-            s = 'Location is: ' + s
+            s = """%s %s lives in """ % (firstname, lastname) + s
             return s
-        elif 'largest account' in query_text or 'biggest account' in query_text and 'know_aggr' in intent:
+        elif txt == 'account' and 'know_aggr' in intent:
             s = ""
             t = requests.get(url + '/largestaccount')
             cb = t.json()
@@ -104,19 +110,16 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = 'Largest account at Enquero is: ' + s
             return s
-
-
         elif 'business' in query_text or 'head count' in query_text and 'know_aggr' in intent:
+            title = 'devas'
             s = ""
-            t = requests.get(url + '/countbybusinesstitle')
+            t = requests.get(url + '/countbybusinesstitle?title='+title)
             cb = t.json()
             for name in cb:
                 s = s + str(cb[name])
             s = s[2:-2]
             s = 'Business count is: ' + s
             return s
-
-
 
     else:
      return fulfillment_text
