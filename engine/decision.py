@@ -21,7 +21,7 @@ def response_parser(response, firstname, lastname):
         cnt = att.get('db_action')
         print("TEXT: " + txt)
 
-        if txt == 'team' and 'know_your_team' in intent:
+        if txt == 'team' and 'know_your_team' in intent or 'know_self' in intent:
             print("Get ME teAM")
             s = "Team members are : "
             t = requests.get(url+'/getteammembers?firstname='+firstname+'&lastname='+lastname)
