@@ -214,7 +214,7 @@ def get_account_head_count(account) :
         return jsonify(e)
 
 @app.route('/getteammembers', methods=['GET'])
-def get_team_members(myfirstname, mylastname):
+def get_team_members():
     myfirstname = request.args.get('firstname')
     mylastname = request.args.get('lastname')
     cur = conn.cursor()
