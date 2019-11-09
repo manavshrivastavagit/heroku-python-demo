@@ -75,7 +75,7 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = 'Date of Joining is: ' + s
             return s
-        elif txt == 'practice lead' and 'know_self' in intent:
+        elif txt == 'practice_lead' and 'know_self' in intent:
             s = ""
             t = requests.get(url + '/getpractielead?firstname='+firstname+'&lastname='+lastname)
             pl = t.json()
