@@ -119,6 +119,17 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = 'Practice Lead is: ' + s
             return s
+        elif txt == 'practice_lead' and 'know_others' in intent:
+            s = ""
+            firstname = att['given-name']
+            lastname = att['last-name']
+            t = requests.get(url + '/getpractielead?firstname='+firstname+'&lastname='+lastname)
+            pl = t.json()
+            for name in pl:
+                s = s + str(pl[name])
+            s = s[2:-2]
+            s = """Practice Lead of %s %s :  """ % (firstname, lastname)+ s
+            return s
         elif txt == 'location_description' and 'know_others' in intent:
             firstname = att['given-name']
             lastname = att['last-name']
