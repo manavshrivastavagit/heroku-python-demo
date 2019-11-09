@@ -51,26 +51,29 @@ def response_parser(response, firstname, lastname):
                 s = s + str(pl[name])
             return s
         elif 'location' in query_text or 'place' in query_text and 'know_others' in intent:
-            s = "Account is: "
+            s = "Location is: "
             t = requests.get(url + '/location?firstname='+firstname+'&lastname='+lastname)
             loc = t.json()
             for name in loc:
                 s = s + str(loc[name])
             return s
-        elif 'business' in query_text or 'count' in query_text and 'know_aggr' in intent:
-            s = "Account is: "
-            t = requests.get(url + '/countbybusinesstitle')
-            cb = t.json()
-            for name in cb:
-                s = s + str(cb[name])
-            return s
         elif 'largest account' in query_text or 'biggest account' in query_text and 'know_aggr' in intent:
-            s = "Account is: "
+            s = "Largest account at Enquero is: "
             t = requests.get(url + '/largestaccount')
             cb = t.json()
             for name in cb:
                 s = s + str(cb[name])
             return s
+
+
+        elif 'business' in query_text or 'head count' in query_text and 'know_aggr' in intent:
+            s = "Business count is: "
+            t = requests.get(url + '/countbybusinesstitle')
+            cb = t.json()
+            for name in cb:
+                s = s + str(cb[name])
+            return s
+
 
 
     else:
