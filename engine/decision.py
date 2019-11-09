@@ -85,6 +85,8 @@ def response_parser(response, firstname, lastname):
             s = 'Practice Lead is: ' + s
             return s
         elif txt == 'location_description' and 'know_others' in intent:
+            firstname = att['given-name']
+            lastname = att['last-name']
             s = ""
             t = requests.get(url + '/location?firstname='+firstname+'&lastname='+lastname)
             loc = t.json()
