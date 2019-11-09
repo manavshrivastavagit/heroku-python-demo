@@ -17,8 +17,8 @@ def response_parser(response, firstname, lastname):
         print(json.loads(jsonObj)["parameters"])
         att = json.loads(jsonObj)["parameters"]
         txt = att['col_name']
-        value = att['col_value']
-        cnt = att['db_action']
+        value = att.get('col_value')
+        cnt = att.get('db_action')
         print("TEXT: " + txt)
 
         if txt == 'team' and 'know_your_team' in intent:
