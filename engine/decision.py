@@ -99,6 +99,17 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = 'Date of Joining is: ' + s
             return s
+        elif txt == 'hire_date' and 'know_others' in intent:
+            s = ""
+            firstname = att['given-name']
+            lastname = att['last-name']
+            t = requests.get(url + '/getjoiningdate?firstname='+firstname+'&lastname='+lastname)
+            doj = t.json()
+            for name in doj:
+                s = s + str(doj[name])
+            s = s[2:-2]
+            s = """%s %s joined Enquero on:  """ % (firstname, lastname)  + s
+            return s
         elif txt == 'practice_lead' and 'know_self' in intent:
             s = ""
             t = requests.get(url + '/getpractielead?firstname='+firstname+'&lastname='+lastname)
