@@ -52,7 +52,7 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = 'Account is: ' + s
             return s
-        elif txt == 'reporting_lead' in query_text and 'know_others' in intent:
+        elif txt == 'reporting_lead' and 'know_others' in intent:
             firstname = att['given-name']
             lastname = att['last-name']
             print("Firstname : " + firstname)
