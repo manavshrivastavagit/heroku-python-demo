@@ -29,19 +29,47 @@ def response_parser(response, firstname, lastname):
             for name in bu:
                 s = s + str(bu[name])
             return s
-        elif 'project name' in query_text or 'account' in query_text and 'know_self' in intent:
+        elif 'project' in query_text or 'account' in query_text and 'know_self' in intent:
             s = "Account is: "
             t = requests.get(url + '/getprojectname?firstname='+firstname+'&lastname='+lastname)
             pj = t.json()
             for name in pj:
                 s = s + str(pj[name])
             return s
-        elif 'doj' in query_text or 'date of joining' in query_text or 'joining date' in query_text and 'know_self' in intent:
-            s = "Account is: "
+        elif 'doj' in query_text or 'date of joining' in query_text or 'joining date' in query_text or 'hiring' in query_text and 'know_self' in intent:
+            s = "Date of Joining is: "
             t = requests.get(url + '/getjoiningdate?firstname='+firstname+'&lastname='+lastname)
             doj = t.json()
             for name in doj:
                 s = s + str(doj[name])
+            return s
+        elif 'practice lead' in query_text or 'project lead' in query_text and 'know_self' in intent:
+            s = "Practice Lead is: "
+            t = requests.get(url + '/getpractielead?firstname='+firstname+'&lastname='+lastname)
+            pl = t.json()
+            for name in pl:
+                s = s + str(pl[name])
+            return s
+        elif 'location' in query_text or 'place' in query_text and 'know_others' in intent:
+            s = "Account is: "
+            t = requests.get(url + '/location?firstname='+firstname+'&lastname='+lastname)
+            loc = t.json()
+            for name in loc:
+                s = s + str(loc[name])
+            return s
+        elif 'business' in query_text or 'count' in query_text and 'know_aggr' in intent:
+            s = "Account is: "
+            t = requests.get(url + '/countbybusinesstitle')
+            cb = t.json()
+            for name in cb:
+                s = s + str(cb[name])
+            return s
+        elif 'largest account' in query_text or 'biggest account' in query_text and 'know_aggr' in intent:
+            s = "Account is: "
+            t = requests.get(url + '/largestaccount')
+            cb = t.json()
+            for name in cb:
+                s = s + str(cb[name])
             return s
 
 

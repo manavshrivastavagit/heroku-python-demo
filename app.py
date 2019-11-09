@@ -63,7 +63,7 @@ def post_something():
             "ERROR": "no name found, please send a name."
         })
 
-@app.route('/getallemployees/', methods=['GET'])
+@app.route('/getallemployees', methods=['GET'])
 def get_all_employee_names():
     print('Connected to Heroku')
     cur = conn.cursor()
@@ -77,6 +77,7 @@ def get_all_employee_names():
     except Exception as e:
         return jsonify(e)
 
+
 @app.route('/getenqueroaccounts', methods=['GET'])
 def get_enquero_accounts():
     cur = conn.cursor()
@@ -86,6 +87,7 @@ def get_enquero_accounts():
         return jsonify(result = account_count)
     except Exception as e:
         return jsonify(e)
+
 
 @app.route('/getprojectname', methods=['GET'])
 def get_project_name():
@@ -134,33 +136,38 @@ def get_location(firstname, lastname):
     except Exception as e:
         return jsonify(e)
 
-@app.route('/getpractielead/', methods=['GET'])
-def get_practice_lead(firstname, lastname):
+
+@app.route('/getpractielead', methods=['GET'])
+def get_practice_lead():
+    firstname = request.args.get('firstname')
+    lastname = request.args.get('lastname')
     cur = conn.cursor()
     try:
         cur.execute("""select practice_lead from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s' """ % (firstname.lower(), lastname.lower()))
         practice_lead = cur.fetchall()
-        return jsonify(result = practice_lead)
+        return jsonify(result=practice_lead)
     except Exception as e:
         return jsonify(e)
 
-@app.route('/countbybusinesstitle/', methods=['GET'])
+
+@app.route('/countbybusinesstitle', methods=['GET'])
 def count_by_business_title(title):
     cur = conn.cursor()
     try:
         cur.execute("""select count(*) from public.enq_emp_details where lower(business_title) = '%s' """ % (title.lower()))
         count = cur.fetchall()
-        return jsonify(result = count)
+        return jsonify(result=count)
     except Exception as e:
         return jsonify(e)
 
-@app.route('/largest_account/', methods=['GET'])
+
+@app.route('/largestaccount', methods=['GET'])
 def largest_account():
     cur = conn.cursor()
     try:
         cur.execute("""select account from (select account, count(*) c from public.enq_emp_details group by account order by c desc) a  limit 1""" )
         account = cur.fetchall()
-        return jsonify(result = account)
+        return jsonify(result=account)
     except Exception as e:
         return jsonify(e)
 
