@@ -183,11 +183,12 @@ def count_under_bu(bu):
         return jsonify(e)
 
 
-@app.route('/reporteecount/', methods=['GET'])
-def reportee_count(reporting_lead):
+@app.route('/reporteecount', methods=['GET'])
+def reportee_count():
+    reporting_lead = request.args.get('reporting_lead')
     cur = conn.cursor()
     try:
-        cur.execute("""select count(*) from public.enq_emp_details where lower(reporting_lead) = '%s' """  %  (reporting_lead.lower()))
+        cur.execute("""select count(*) from public.enq_emp_details where lower(reporting_lead) = '%s' """ % (reporting_lead.lower()))
         rp_count = cur.fetchall()
         return jsonify(result=rp_count)
     except Exception as e:
@@ -201,7 +202,6 @@ def get_reporting_manager():
     last_name = request.args.get('lastname')
     try:
         stm = "select reporting_lead from public.enq_emp_details where lower(first_name) = '%s' or lower(last_name) = '%s' " % (first_name.lower(), last_name.lower())
-        print ("stm-->",stm )
         cur.execute(stm)
         reporting_manager = cur.fetchall()
         if len(reporting_manager) == 0:
@@ -213,7 +213,7 @@ def get_reporting_manager():
         return jsonify(e)
 
 @app.route('/getaccountheadcount', methods=['GET'])
-def get_account_head_count(account) :
+def get_account_head_count(account):
     cur = conn.cursor()
     try:
         stm = "select count(*) from public.enq_emp_details where lower(account) = '%s' " % (account.lower())

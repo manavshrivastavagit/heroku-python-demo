@@ -8,6 +8,7 @@ def response_parser(response, firstname, lastname):
     query_text = response.query_result.query_text
     fulfillment_text = response.query_result.fulfillment_text
     intent = response.query_result.intent
+    reporting_lead = ''
     print("---------Response:"+str(response))
     if not fulfillment_text:
         if 'team members' in query_text and 'know_your_team' in intent:
@@ -44,6 +45,20 @@ def response_parser(response, firstname, lastname):
                 s = s + str(pj[name])
             s = s[2:-2]
             s = 'Account is: ' + s
+            return s
+        elif 'number of people' in query_text and 'know_others' in intent:
+            firstname = response.query_result.fields.given-name
+            lastname = response.query_result.fields.last-name
+            print(firstname)
+            print(lastname)
+            reporting_lead = lastname.lower() + ', ' + firstname.lower()
+            s = ""
+            t = requests.get(url + '/reporteecount?reporting_lead='+reporting_lead)
+            rc = t.json()
+            for name in rc:
+                s = s + str(rc[name])
+            s = s[2:-2]
+            s = 'Location is: ' + s
             return s
         elif 'doj' in query_text or 'date of joining' in query_text or 'joining date' in query_text or 'hiring' in query_text or 'hire' in query_text and 'know_self' in intent:
             s = ""
