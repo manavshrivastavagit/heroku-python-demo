@@ -49,8 +49,9 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = 'Reporting Manager: ' + s
             return s
-        elif txt == 'business_unit_description' and 'know_self' in intent:
+        elif txt == 'business_unit_description' or txt == 'business unit' and 'know_self' in intent:
             s = ""
+            print('FIRST: '+ firstname)
             t = requests.get(url + '/getbusinessunit?firstname='+firstname+'&lastname='+lastname)
             bu = t.json()
             for name in bu:
@@ -174,12 +175,12 @@ def response_parser(response, firstname, lastname):
             return s
         elif cnt == 'count' and 'know_aggr' in intent:
             s = ""
-            t = requests.get(url + '/countbybusinesstitle?title='+value)
+            t = requests.get(url + '/countbybusinesstitle?title='+value.lower())
             cb = t.json()
             for name in cb:
                 s = s + str(cb[name])
             s = s[2:-2]
-            s = """The numbers of %s in Enquero is: """ % (value) + s
+            s = """%s's in Enquero: """ % (value) + s
             return s
 
     else:
