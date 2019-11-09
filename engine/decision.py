@@ -10,7 +10,7 @@ def response_parser(response, firstname, lastname):
         if 'team members' in query_text and 'know_your_team' in intent:
             team_members = requests.get(url+'/getteammembers?firstname='+firstname+'&lastname='+lastname)
             print(team_members)
-            fulfillment_text = json.dump(team_members)
+            fulfillment_text = json.dumps(team_members)
             return fulfillment_text
     else:
      return fulfillment_text
