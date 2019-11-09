@@ -37,8 +37,6 @@ def response_parser(response, firstname, lastname):
             s = 'Reporting Manager: ' + s
             return s
         elif txt == 'reporting_manager' and 'know_others' in intent:
-            firstname = f.lower()
-            lastname = l.lower()
             s = ""
             t = requests.get(url + '/getreportingmanager?firstname='+firstname+'&lastname='+lastname)
             rm = t.json()
