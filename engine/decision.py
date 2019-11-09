@@ -1,5 +1,6 @@
 import requests
 import json
+from google.protobuf.json_format import MessageToJson
 
 url = 'https://nero-enquero.herokuapp.com'
 
@@ -9,8 +10,9 @@ def response_parser(response, firstname, lastname):
     fulfillment_text = response.query_result.fulfillment_text
     intent = response.query_result.intent.display_name
     reporting_lead = ''
-    print('^^^^^^^^^^' + response.query_result.parameters.fields.string_value)
     print("---------Response:"+str(response))
+    jsonObj = MessageToJson(response.query_result)
+    print(json.loads(jsonObj)["parameters"])
     if not fulfillment_text:
         if 'team members' in query_text and 'know_your_team' in intent:
             s = "Team members are : "
