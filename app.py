@@ -127,12 +127,14 @@ def get_business_unit():
         return jsonify(e)
 
 @app.route('/location', methods=['GET'])
-def get_location(firstname, lastname):
+def get_location():
+    firstname = request.args.get('firstname')
+    lastname = request.args.get('lastname')
     cur = conn.cursor()
     try:
         cur.execute("""select location_description from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s' """ % (firstname.lower(), lastname.lower()))
         location = cur.fetchall()
-        return jsonify(result = location)
+        return jsonify(result=location)
     except Exception as e:
         return jsonify(e)
 
