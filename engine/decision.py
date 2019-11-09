@@ -17,7 +17,7 @@ def response_parser(response, firstname, lastname):
     txt = att['col_name']
     print("TEXT: " + txt)
     if not fulfillment_text:
-        if 'team members' in query_text and 'know_your_team' in intent:
+        if txt == 'team' and 'know_your_team' in intent:
             s = "Team members are : "
             t = requests.get(url+'/getteammembers?firstname='+firstname+'&lastname='+lastname)
             team_members = t.json()
@@ -34,7 +34,7 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = 'Reporting Manager: ' + s
             return s
-        elif 'business unit' in query_text or 'bu' in query_text and 'know_self' in intent:
+        elif txt == 'business_unit_description' and 'know_self' in intent:
             s = ""
             t = requests.get(url + '/getbusinessunit?firstname='+firstname+'&lastname='+lastname)
             bu = t.json()
@@ -43,7 +43,7 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = 'Business Unit is: ' + s
             return s
-        elif 'project' in query_text or 'account' in query_text and 'know_self' in intent:
+        elif txt == 'account' and 'know_self' in intent:
             s = ""
             t = requests.get(url + '/getprojectname?firstname='+firstname+'&lastname='+lastname)
             pj = t.json()
@@ -52,10 +52,10 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = 'Account is: ' + s
             return s
-        elif 'who all report' in query_text and 'know_others' in intent:
-            firstname = response.query_result.fields.given-name
-            lastname = response.query_result.fields.last-name
-            print(firstname)
+        elif txt == 'reporting_lead' in query_text and 'know_others' in intent:
+            firstname = att['given-name']
+            lastname = att['last-name']
+            print("Firstname : " + firstname)
             print(lastname)
             reporting_lead = lastname.lower() + ', ' + firstname.lower()
             s = ""
