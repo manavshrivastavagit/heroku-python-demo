@@ -12,10 +12,8 @@ def response_parser(response, firstname, lastname):
             t = requests.get(url+'/getteammembers?firstname='+firstname+'&lastname='+lastname)
             team_members = t.json()
             print(team_members)
-            tm = json.loads(team_members)
-            print("TM..." + tm)
-            for name in tm:
-                print(str(tm[name]))
+            for name in team_members:
+                s = s + str(team_members[name])
         return s
     else:
      return fulfillment_text
