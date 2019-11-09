@@ -56,7 +56,7 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = 'Your Business Unit is: ' + s
             return s
-        elif txt == 'business_unit_description' and 'know_others' in intent:
+        elif txt == 'business_unit_description' or txt == 'business unit' and 'know_others' in intent:
             firstname = att['given-name']
             lastname = att['last-name']
             s = ""
