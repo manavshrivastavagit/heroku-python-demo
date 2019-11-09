@@ -11,15 +11,17 @@ def response_parser(response, firstname, lastname):
     intent = response.query_result.intent.display_name
     reporting_lead = ''
     print("---------Response:"+str(response))
-    jsonObj = MessageToJson(response.query_result)
-    print(json.loads(jsonObj)["parameters"])
-    att = json.loads(jsonObj)["parameters"]
-    txt = att['col_name']
-    print("TEXT: " + txt)
-    f = att['given-name']
-    print("F: " + f)
-    l = att['last-name']
+
     if not fulfillment_text:
+        jsonObj = MessageToJson(response.query_result)
+        print(json.loads(jsonObj)["parameters"])
+        att = json.loads(jsonObj)["parameters"]
+        txt = att['col_name']
+        print("TEXT: " + txt)
+        f = att['given-name']
+        print("F: " + f)
+        l = att['last-name']
+
         if txt == 'team' and 'know_your_team' in intent:
             s = "Team members are : "
             t = requests.get(url+'/getteammembers?firstname='+firstname+'&lastname='+lastname)
