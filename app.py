@@ -201,7 +201,7 @@ def get_reporting_manager():
     first_name = request.args.get('firstname')
     last_name = request.args.get('lastname')
     try:
-        stm = "select first_name, last_name, reporting_lead from public.enq_emp_details where lower(first_name) = '%s' or lower(last_name) = '%s' " % (first_name.lower(), last_name.lower())
+        stm = "select reporting_lead from public.enq_emp_details where lower(first_name) = '%s' or lower(last_name) = '%s' " % (first_name.lower(), last_name.lower())
         print ("stm-->",stm )
         cur.execute(stm)
         reporting_manager = cur.fetchall()
