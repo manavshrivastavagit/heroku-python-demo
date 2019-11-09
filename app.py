@@ -290,7 +290,7 @@ def detect_intent_texts(project_id, session_id, texts, firstname, lastname, lang
     response = session_client.detect_intent(
         session=session, query_input=query_input)
 
-    decision.response_parser(response, firstname, lastname)
+    res = decision.response_parser(response, firstname, lastname)
 
     # print('=' * 20)
     # # print('Query text: {}'.format(response.query_result.query_text))
@@ -303,7 +303,7 @@ def detect_intent_texts(project_id, session_id, texts, firstname, lastname, lang
     # print('Fulfillment query_result: {}\n'.format(
     #     response.query_result))
     # print (json.dumps(response, indent=2))
-    return response.query_result.fulfillment_text       
+    return res
 
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
