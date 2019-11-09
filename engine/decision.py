@@ -17,6 +17,8 @@ def response_parser(response, firstname, lastname):
         print(json.loads(jsonObj)["parameters"])
         att = json.loads(jsonObj)["parameters"]
         txt = att['col_name']
+        value = att['col_value']
+        cnt = att['db_action']
         print("TEXT: " + txt)
 
         if txt == 'team' and 'know_your_team' in intent:
@@ -170,15 +172,14 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = 'Largest account at Enquero is: ' + s
             return s
-        elif 'business' in query_text or 'head count' in query_text and 'know_aggr' in intent:
-            title = 'devas'
+        elif cnt == 'count' and 'know_aggr' in intent:
             s = ""
-            t = requests.get(url + '/countbybusinesstitle?title='+title)
+            t = requests.get(url + '/countbybusinesstitle?title='+value)
             cb = t.json()
             for name in cb:
                 s = s + str(cb[name])
             s = s[2:-2]
-            s = 'Business count is: ' + s
+            s = """The numbers of %s in Enquero is: """ % (value) + s
             return s
 
     else:
