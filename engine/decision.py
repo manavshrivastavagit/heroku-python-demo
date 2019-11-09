@@ -14,7 +14,7 @@ def response_parser(response, firstname, lastname):
     jsonObj = MessageToJson(response.query_result)
     print(json.loads(jsonObj)["parameters"])
     att = json.loads(jsonObj)["parameters"]
-    txt = att['attribute']
+    txt = att['col_name']
     print("TEXT: " + txt)
     if not fulfillment_text:
         if 'team members' in query_text and 'know_your_team' in intent:
@@ -25,7 +25,7 @@ def response_parser(response, firstname, lastname):
             for name in team_members:
                 s = s + str(team_members[name])
             return s
-        elif 'reporting manager' in query_text and 'know_self' in intent:
+        elif txt == 'reporting_lead' in query_text and 'know_self' in intent:
             s = ""
             t = requests.get(url + '/getreportingmanager?firstname='+firstname+'&lastname='+lastname)
             rm = t.json()
@@ -75,7 +75,7 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = 'Date of Joining is: ' + s
             return s
-        elif 'practice lead' in query_text or 'project lead' in query_text and 'know_self' in intent:
+        elif txt == 'practice lead' and 'know_self' in intent:
             s = ""
             t = requests.get(url + '/getpractielead?firstname='+firstname+'&lastname='+lastname)
             pl = t.json()
