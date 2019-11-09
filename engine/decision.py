@@ -9,11 +9,14 @@ def response_parser(response, firstname, lastname):
     intent = response.query_result.intent.display_name
     if not fulfillment_text:
         if 'team members' in query_text and 'know_your_team' in intent:
-            team_members = requests.get(url+'/getteammembers?firstname='+firstname+'&lastname='+lastname)
-            tm = json.loads(team_members.json())
+            t = requests.get(url+'/getteammembers?firstname='+firstname+'&lastname='+lastname)
+            team_members = t.json()
+            print(team_members)
+            tm = json.loads(team_members)
             for name in tm:
                 for n in name:
                     s = s + n
+            print(s)
             return s
     else:
      return fulfillment_text
