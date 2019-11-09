@@ -6,12 +6,11 @@ import pandas as pd
 import psycopg2
 import requests
 from flask_cors import CORS
-
+from engine import decision
 from exception.employee_not_found import EmployeeNotFound
 from exception.account_not_found import AccountNotFound
 
-os.environ[
-    "GOOGLE_APPLICATION_CREDENTIALS"] = "C:\\Users\\SridharRamakrishnanI\\Development\\github\\nero-heroku-python\\NERO-95a41ac7c5b2.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:\\Users\\SridharRamakrishnanI\\Development\\github\\nero-heroku-python\\NERO-95a41ac7c5b2.json"
 
 url = requests.utils.urlparse(
     'postgres://uadqvrzvvhsgvl:76e9e53176d897f8bb1290fec47bcdde69043710aecb602067de96961e1c7bc0@ec2-107-21-126-201.compute-1.amazonaws.com:5432/d7d2gs1qbqj579')
@@ -89,6 +88,119 @@ def get_enquero_accounts():
         cur.execute("""select count(account) from (select distinct account from public.enq_emp_details) a """)
         account_count = cur.fetchall()
         return jsonify(result=account_count)
+    except Exception as e:
+        return jsonify(e)
+
+
+@app.route('/getprojectname/', methods=['GET'])
+def get_project_name(firstname, lastname):
+    cur = conn.cursor()
+    try:
+        cur.execute(
+            """select account from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s' """ % (
+            firstname.lower(), lastname.lower()))
+        account_name = cur.fetchall()
+        return jsonify(result=account_name)
+    except Exception as e:
+        return jsonify(e)
+
+
+@app.route('/getjoiningdate/', methods=['GET'])
+def get_hire_date(firstname, lastname):
+    cur = conn.cursor()
+    try:
+        cur.execute(
+            """select hire_date from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s' """ % (
+            firstname.lower(), lastname.lower()))
+        hire_date = cur.fetchall()
+        return jsonify(result=hire_date)
+    except Exception as e:
+        return jsonify(e)
+
+
+@app.route('/getbusinessunit/', methods=['GET'])
+def get_business_unit(firstname, lastname):
+    cur = conn.cursor()
+    try:
+        cur.execute(
+            """select business_unit_description from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s' """ % (
+            firstname.lower(), lastname.lower()))
+        business_unit = cur.fetchall()
+        return jsonify(result=business_unit)
+    except Exception as e:
+        return jsonify(e)
+
+
+@app.route('/location/', methods=['GET'])
+def get_location(firstname, lastname):
+    cur = conn.cursor()
+    try:
+        cur.execute(
+            """select location_description from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s' """ % (
+            firstname.lower(), lastname.lower()))
+        location = cur.fetchall()
+        return jsonify(result=location)
+    except Exception as e:
+        return jsonify(e)
+
+
+@app.route('/getpractielead/', methods=['GET'])
+def get_practice_lead(firstname, lastname):
+    cur = conn.cursor()
+    try:
+        cur.execute(
+            """select practice_lead from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s' """ % (
+            firstname.lower(), lastname.lower()))
+        practice_lead = cur.fetchall()
+        return jsonify(result=practice_lead)
+    except Exception as e:
+        return jsonify(e)
+
+
+@app.route('/countbybusinesstitle/', methods=['GET'])
+def count_by_business_title(title):
+    cur = conn.cursor()
+    try:
+        cur.execute(
+            """select count(*) from public.enq_emp_details where lower(business_title) = '%s' """ % (title.lower()))
+        count = cur.fetchall()
+        return jsonify(result=count)
+    except Exception as e:
+        return jsonify(e)
+
+
+@app.route('/largest_account/', methods=['GET'])
+def largest_account():
+    cur = conn.cursor()
+    try:
+        cur.execute(
+            """select account from (select account, count(*) c from public.enq_emp_details group by account order by c desc) a  limit 1""")
+        account = cur.fetchall()
+        return jsonify(result=account)
+    except Exception as e:
+        return jsonify(e)
+
+
+@app.route('/bucount/', methods=['GET'])
+def count_under_bu(bu):
+    cur = conn.cursor()
+    try:
+        cur.execute("""select count(*) from public.enq_emp_details where lower(business_unit_description) = '%s' """ % (
+            bu.lower()))
+        bu_count = cur.fetchall()
+        return jsonify(result=bu_count)
+    except Exception as e:
+        return jsonify(e)
+
+
+@app.route('/reporteecount/', methods=['GET'])
+def reportee_count(firstname, lastname):
+    cur = conn.cursor()
+    name = lastname.lower() + ', ' + firstname.lower()
+    try:
+        cur.execute("""select count(*) from public.enq_emp_details where lower(reporting_lead) = '%s' """ % (name))
+        rp_count = cur.fetchall()
+        return jsonify(result=rp_count)
     except Exception as e:
         return jsonify(e)
 
@@ -177,7 +289,9 @@ def index():
 def askNero():
     # Retrieve the name from url parameter
     query = request.args.get("query", None)
-    return detect_intent_texts("nero-sgiuhb", "123", query, "en-US")
+    firstname = request.args.get("firstname", None)
+    lastname = request.args.get("lastname", None)
+    return detect_intent_texts("nero-sgiuhb", "123", query, firstname, lastname, "en-US")
 
 
 # check DF server connection
@@ -188,7 +302,7 @@ def df():
     return detect_intent_texts("nero-sgiuhb", "123", "Hi", "en-US")
 
 
-def detect_intent_texts(project_id, session_id, texts, language_code):
+def detect_intent_texts(project_id, session_id, texts, firstname, lastname, language_code):
     """Returns the result of detect intent with texts as inputs.
 
     Using the same `session_id` between requests allows continuation
@@ -207,16 +321,18 @@ def detect_intent_texts(project_id, session_id, texts, language_code):
     response = session_client.detect_intent(
         session=session, query_input=query_input)
 
-    print('=' * 20)
+    decision.response_parser(response, firstname, lastname)
+
+    # print('=' * 20)
+    # # print('Query text: {}'.format(response.query_result.query_text))
     # print('Query text: {}'.format(response.query_result.query_text))
-    print('Query text: {}'.format(response.query_result.query_text))
-    print('Detected intent: {} (confidence: {})\n'.format(
-        response.query_result.intent.display_name,
-        response.query_result.intent_detection_confidence))
-    print('Fulfillment text: {}\n'.format(
-        response.query_result.fulfillment_text))
-    print('Fulfillment query_result: {}\n'.format(
-        response.query_result))
+    # print('Detected intent: {} (confidence: {})\n'.format(
+    #     response.query_result.intent.display_name,
+    #     response.query_result.intent_detection_confidence))
+    # print('Fulfillment text: {}\n'.format(
+    #     response.query_result.fulfillment_text))
+    # print('Fulfillment query_result: {}\n'.format(
+    #     response.query_result))
     # print (json.dumps(response, indent=2))
     return response.query_result.fulfillment_text
 
