@@ -70,7 +70,7 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = """%s %s business unit is """ % (firstname, lastname) + s
             return s
-        elif txt == 'account' and 'know_self' in intent:
+        elif txt == 'account' or txt == 'current project' and 'know_self' in intent:
             s = ""
             t = requests.get(url + '/getprojectname?firstname='+firstname+'&lastname='+lastname)
             pj = t.json()
