@@ -36,8 +36,10 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = 'Reporting Manager: ' + s
             return s
-        elif txt == 'reporting_manager' and 'know_others' in intent:
+        elif txt == 'reporting_manager' or txt == 'reporting manager' and 'know_others' in intent:
             s = ""
+            firstname = att['given-name']
+            lastname = att['last-name']
             t = requests.get(url + '/getreportingmanager?firstname='+firstname+'&lastname='+lastname)
             rm = t.json()
             for name in rm:
@@ -52,7 +54,18 @@ def response_parser(response, firstname, lastname):
             for name in bu:
                 s = s + str(bu[name])
             s = s[2:-2]
-            s = 'Business Unit is: ' + s
+            s = 'Your Business Unit is: ' + s
+            return s
+        elif txt == 'business_unit_description' and 'know_others' in intent:
+            firstname = att['given-name']
+            lastname = att['last-name']
+            s = ""
+            t = requests.get(url + '/getbusinessunit?firstname='+firstname+'&lastname='+lastname)
+            bu = t.json()
+            for name in bu:
+                s = s + str(bu[name])
+            s = s[2:-2]
+            s = 'Your Business Unit is: ' + s
             return s
         elif txt == 'account' and 'know_self' in intent:
             s = ""
