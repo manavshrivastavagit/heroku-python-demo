@@ -29,6 +29,21 @@ def response_parser(response, firstname, lastname):
             for name in bu:
                 s = s + str(bu[name])
             return s
+        elif 'project name' in query_text or 'account' in query_text and 'know_self' in intent:
+            s = "Account is: "
+            t = requests.get(url + '/getprojectname?firstname='+firstname+'&lastname='+lastname)
+            pj = t.json()
+            for name in pj:
+                s = s + str(pj[name])
+            return s
+        elif 'doj' in query_text or 'date of joining' in query_text or 'joining date' in query_text and 'know_self' in intent:
+            s = "Account is: "
+            t = requests.get(url + '/getjoiningdate?firstname='+firstname+'&lastname='+lastname)
+            doj = t.json()
+            for name in doj:
+                s = s + str(doj[name])
+            return s
+
 
     else:
      return fulfillment_text

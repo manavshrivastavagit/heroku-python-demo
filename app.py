@@ -77,7 +77,7 @@ def get_all_employee_names():
     except Exception as e:
         return jsonify(e)
 
-@app.route('/getenqueroaccounts/', methods=['GET'])
+@app.route('/getenqueroaccounts', methods=['GET'])
 def get_enquero_accounts():
     cur = conn.cursor()
     try:
@@ -87,19 +87,23 @@ def get_enquero_accounts():
     except Exception as e:
         return jsonify(e)
 
-@app.route('/getprojectname/', methods=['GET'])
-def get_project_name(firstname, lastname):
+@app.route('/getprojectname', methods=['GET'])
+def get_project_name():
+    firstname = request.args.get('firstname')
+    lastname = request.args.get('lastname')
     cur = conn.cursor()
     try:
         cur.execute("""select account from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s' """ % (firstname.lower(), lastname.lower()))
         account_name = cur.fetchall()
-        return jsonify(result = account_name)
+        return jsonify(result=account_name)
     except Exception as e:
         return jsonify(e)
 
 
 @app.route('/getjoiningdate', methods=['GET'])
-def get_hire_date(firstname, lastname):
+def get_hire_date():
+    firstname = request.args.get('firstname')
+    lastname = request.args.get('lastname')
     cur = conn.cursor()
     try:
         cur.execute("""select hire_date from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s' """ % (firstname.lower(), lastname.lower()))
