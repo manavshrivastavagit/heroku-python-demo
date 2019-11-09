@@ -2,6 +2,8 @@ import requests
 import json
 
 url = 'https://nero-enquero.herokuapp.com'
+
+
 def response_parser(response, firstname, lastname):
     query_text = response.query_result.query_text
     fulfillment_text = response.query_result.fulfillment_text
@@ -42,7 +44,7 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = 'Account is: ' + s
             return s
-        elif 'doj' in query_text or 'date of joining' in query_text or 'joining date' in query_text or 'hiring' in query_text and 'know_self' in intent:
+        elif 'doj' in query_text or 'date of joining' in query_text or 'joining date' in query_text or 'hiring' in query_text or 'hire' in query_text and 'know_self' in intent:
             s = ""
             t = requests.get(url + '/getjoiningdate?firstname='+firstname+'&lastname='+lastname)
             doj = t.json()
