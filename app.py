@@ -6,7 +6,7 @@ import pandas as pd
 import psycopg2
 import requests
 from flask_cors import CORS
-
+from engine import decision
 from exception.employee_not_found import EmployeeNotFound
 from exception.account_not_found import AccountNotFound
 
@@ -258,7 +258,9 @@ def index():
 def askNero():
      # Retrieve the name from url parameter
     query = request.args.get("query", None)
-    return detect_intent_texts("nero-sgiuhb", "123", query, "en-US" )
+    firstname = request.args.get("firstname", None)
+    lastname = request.args.get("lastname", None)
+    return detect_intent_texts("nero-sgiuhb", "123", query, firstname, lastname, "en-US" )
 
 # check DF server connection
 @app.route('/df', methods=['GET'])
@@ -268,7 +270,7 @@ def df():
     return detect_intent_texts("nero-sgiuhb", "123", "Hi", "en-US" )    
 
 
-def detect_intent_texts(project_id, session_id, texts, language_code):
+def detect_intent_texts(project_id, session_id, texts, firstname, lastname, language_code):
     """Returns the result of detect intent with texts as inputs.
 
     Using the same `session_id` between requests allows continuation
@@ -287,6 +289,8 @@ def detect_intent_texts(project_id, session_id, texts, language_code):
 
     response = session_client.detect_intent(
         session=session, query_input=query_input)
+
+    decision.response_parser(response, firstname, lastname)
 
     print('=' * 20)
     # print('Query text: {}'.format(response.query_result.query_text))
