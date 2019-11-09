@@ -8,7 +8,7 @@ def response_parser(response, firstname, lastname):
     query_text = response.query_result.query_text
     fulfillment_text = response.query_result.fulfillment_text
     intent = response.query_result.intent
-    print("---------Response:"+response)
+    print("---------Response:"+str(response))
     if not fulfillment_text:
         if 'team members' in query_text and 'know_your_team' in intent:
             s = "Team members are : "
