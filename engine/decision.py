@@ -14,9 +14,7 @@ def response_parser(response, firstname, lastname):
             print(team_members)
             tm = json.loads(team_members)
             for name in tm:
-                for n in name:
-                    s = s + n
-            print(s)
-            return s
+                s = s + str(tm[name])
+        return s
     else:
      return fulfillment_text
