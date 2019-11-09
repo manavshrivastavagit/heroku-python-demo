@@ -17,9 +17,7 @@ def response_parser(response, firstname, lastname):
             return s
         elif 'reporting manager' in query_text and 'know_self' in intent:
             s = "Reporting Manager is: "
-            firstname = 'shruti'
-            lastname = 'jain'
-            t = requests.get(url + 'getreportingmanager?firstname='+firstname+'&lastname='+lastname)
+            t = requests.get(url + '/getreportingmanager?firstname='+firstname+'&lastname='+lastname)
             rm = t.json()
             for name in rm:
                 s = s + str(rm[name])
