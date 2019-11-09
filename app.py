@@ -98,7 +98,7 @@ def get_project_name(firstname, lastname):
         return jsonify(e)
 
 
-@app.route('/getjoiningdate/', methods=['GET'])
+@app.route('/getjoiningdate', methods=['GET'])
 def get_hire_date(firstname, lastname):
     cur = conn.cursor()
     try:
@@ -108,17 +108,19 @@ def get_hire_date(firstname, lastname):
     except Exception as e:
         return jsonify(e)
 
-@app.route('/getbusinessunit/', methods=['GET'])
-def get_business_unit(firstname, lastname):
+@app.route('/getbusinessunit', methods=['GET'])
+def get_business_unit():
+    firstname = request.args.get('firstname')
+    lastname = request.args.get('lastname')
     cur = conn.cursor()
     try:
         cur.execute("""select business_unit_description from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s' """ % (firstname.lower(), lastname.lower()))
         business_unit = cur.fetchall()
-        return jsonify(result = business_unit)
+        return jsonify(result=business_unit)
     except Exception as e:
         return jsonify(e)
 
-@app.route('/location/', methods=['GET'])
+@app.route('/location', methods=['GET'])
 def get_location(firstname, lastname):
     cur = conn.cursor()
     try:

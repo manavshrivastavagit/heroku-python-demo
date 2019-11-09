@@ -16,11 +16,18 @@ def response_parser(response, firstname, lastname):
                 s = s + str(team_members[name])
             return s
         elif 'reporting manager' in query_text and 'know_self' in intent:
-            s = "Reporting Manager is: "
+            s = "Reporting Manager for: "
             t = requests.get(url + '/getreportingmanager?firstname='+firstname+'&lastname='+lastname)
             rm = t.json()
             for name in rm:
                 s = s + str(rm[name])
+            return s
+        elif 'business unit' in query_text or 'bu' in query_text and 'know_self' in intent:
+            s = "Business Unit is: "
+            t = requests.get(url + '/getbusinessunit?firstname='+firstname+'&lastname='+lastname)
+            bu = t.json()
+            for name in bu:
+                s = s + str(bu[name])
             return s
 
     else:
