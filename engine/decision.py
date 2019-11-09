@@ -16,7 +16,7 @@ def response_parser(response, firstname, lastname):
         jsonObj = MessageToJson(response.query_result)
         print(json.loads(jsonObj)["parameters"])
         att = json.loads(jsonObj)["parameters"]
-        txt = att['col_name']
+        txt = att.get('col_name')
         value = att.get('col_value')
         cnt = att.get('db_action')
         print("TEXT: " + txt)
@@ -70,7 +70,7 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = """%s %s business unit is """ % (firstname, lastname) + s
             return s
-        elif txt == 'account' and 'know_self' in intent:
+        elif txt == 'account' or txt == 'current project' and 'know_self' in intent:
             s = ""
             t = requests.get(url + '/getprojectname?firstname='+firstname+'&lastname='+lastname)
             pj = t.json()

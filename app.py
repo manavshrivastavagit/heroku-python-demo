@@ -216,6 +216,7 @@ def get_reporting_manager():
     except Exception as e:
         return jsonify(e)
 
+
 @app.route('/getaccountheadcount', methods=['GET'])
 def get_account_head_count(account):
     cur = conn.cursor()
@@ -230,6 +231,7 @@ def get_account_head_count(account):
         return jsonify('No account found by that name')
     except Exception as e:
         return jsonify(e)
+
 
 @app.route('/getteammembers', methods=['GET'])
 def get_team_members():
