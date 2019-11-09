@@ -225,7 +225,8 @@ def get_team_members():
         print(team_member_query)
         cur.execute(team_member_query)
         team_members = cur.fetchall()
-        return jsonify(result = team_members )
+        print(team_members)
+        return jsonify(result=team_members)
     except Exception as e:
         return e
 
