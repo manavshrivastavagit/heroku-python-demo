@@ -38,7 +38,7 @@ def response_parser(response, firstname, lastname):
             s = 'Reporting Manager: ' + s
             return s
         elif txt == 'reporting_manager' and 'know_others' in intent:
-            if f:
+            if len(f) != 0:
                 print('Its here' + f)
                 firstname = f.lower()
                 lastname = l.lower()
