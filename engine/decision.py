@@ -1,15 +1,16 @@
 import requests
+import json
 
 url = 'https://nero-enquero.herokuapp.com'
 def response_parser(response, firstname, lastname):
     query_text = response.query_result.query_text
     fulfillment_text = response.query_result.fulfillment_text
-    print('^^^^^^^', response)
-    print('======= response completed')
     intent = response.query_result.intent.display_name
-    print('-------------', intent)
     if not fulfillment_text:
-        if 'team members' in query_text:
-            pass
+        if 'team members' in query_text and 'know_your_team' in intent:
+            team_members = requests.get(url+'/getteammembers?firstname='+firstname+'&lastname='+lastname)
+            print(team_members)
+            fulfillment_text = json.dump(team_members)
+            return fulfillment_text
     else:
      return fulfillment_text

@@ -215,12 +215,12 @@ def get_account_head_count(account) :
 
 @app.route('/getteammembers', methods=['GET'])
 def get_team_members(myfirstname, mylastname):
+    myfirstname = request.args.get('firstname')
+    mylastname = request.args.get('lastname')
     cur = conn.cursor()
     try:
         query = "select account, business_unit_description, reporting_lead, delivery_lead from public.enq_emp_details where lower(first_name) = '%s' and lower(last_name) = '%s'" % (myfirstname, mylastname)
         df = pd.read_sql_query(query, conn)
-        print(df['account'][0])
-        print('--------------')
         team_member_query = "select concat(first_name, ' ' , last_name) from public.enq_emp_details where lower(account) = '%s'  and lower(business_unit_description) = '%s' and lower(reporting_lead) = '%s' and lower(delivery_lead) = '%s' and lower(first_name) != '%s' and lower(last_name) != '%s' " % (df['account'][0].lower(), df['business_unit_description'][0].lower(), df['reporting_lead'][0].lower(), df['delivery_lead'][0].lower(), myfirstname.lower(), mylastname.lower())
         print(team_member_query)
         cur.execute(team_member_query)
