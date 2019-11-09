@@ -22,6 +22,7 @@ def response_parser(response, firstname, lastname):
         print("TEXT: " + txt)
 
         if txt == 'team' and 'know_your_team' in intent:
+            print("Get ME teAM")
             s = "Team members are : "
             t = requests.get(url+'/getteammembers?firstname='+firstname+'&lastname='+lastname)
             team_members = t.json()
@@ -77,7 +78,7 @@ def response_parser(response, firstname, lastname):
             for name in pj:
                 s = s + str(pj[name])
             s = s[2:-2]
-            s = 'Account is: ' + s
+            s = 'Your account is: ' + s
             return s
         elif txt == 'reporting_lead' and 'know_others' in intent:
             firstname = att['given-name']
