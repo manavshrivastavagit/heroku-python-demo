@@ -12,6 +12,7 @@ def response_parser(response, firstname, lastname):
     reporting_lead = ''
     print("---------Response:"+str(response))
     jsonObj = MessageToJson(response.query_result)
+    print(json.loads(jsonObj)["parameters"])
     att = json.loads(jsonObj)["parameters"]
     txt = att['attribute']
     print("TEXT: " + txt)
