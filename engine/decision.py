@@ -36,7 +36,7 @@ def response_parser(response, firstname, lastname):
             s = s[2:-2]
             s = 'Reporting Manager: ' + s
             return s
-        elif txt == 'reporting_manager' or txt == 'reporting manager' and 'know_others' in intent:
+        elif txt == 'reporting_manager' or txt == 'reporting manager' or txt == 'reports' and 'know_others' in intent:
             s = ""
             firstname = att['given-name']
             lastname = att['last-name']
@@ -118,6 +118,15 @@ def response_parser(response, firstname, lastname):
                 s = s + str(loc[name])
             s = s[2:-2]
             s = """%s %s lives in """ % (firstname, lastname) + s
+            return s
+        elif txt == 'location_description' and 'know_self' in intent:
+            s = ""
+            t = requests.get(url + '/location?firstname='+firstname+'&lastname='+lastname)
+            loc = t.json()
+            for name in loc:
+                s = s + str(loc[name])
+            s = s[2:-2]
+            s = """You live in """ % (firstname, lastname) + s
             return s
         elif txt == 'account' and 'know_aggr' in intent:
             s = ""
