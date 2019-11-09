@@ -26,12 +26,21 @@ def response_parser(response, firstname, lastname):
                 s = s + str(team_members[name])
             return s
         elif txt == 'reporting_lead' and 'know_self' in intent:
+            s = ""
+            t = requests.get(url + '/getreportingmanager?firstname='+firstname+'&lastname='+lastname)
+            rm = t.json()
+            for name in rm:
+                s = s + str(rm[name])
+            s = s[2:-2]
+            s = 'Reporting Manager: ' + s
+            return s
+        elif txt == 'reporting_lead' and 'know_others' in intent:
             f = att['given-name']
             print("F: " + f)
             l = att['last-name']
             if f:
-                f = firstname
-                l = lastname
+                firstname = f
+                lastname = l
             s = ""
             t = requests.get(url + '/getreportingmanager?firstname='+firstname+'&lastname='+lastname)
             rm = t.json()
